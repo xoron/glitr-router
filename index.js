@@ -81,11 +81,7 @@ var GlitrRouter = function () {
 
             var headers = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
 
-            console.log('socket id 3:', socket.id);
-
             return new Promise(function (resolve, reject) {
-                console.log('generating emitter');
-
                 if (!!headers.callback) {
                     var requestTimeout = _this2.options.requestTimeout;
 
@@ -102,7 +98,6 @@ var GlitrRouter = function () {
                     });
                 }
 
-                console.log('socket id 4:', socket.id);
                 socket.emit(method + '::>' + path, { headers: headers, body: payload });
             });
         }
@@ -111,19 +106,18 @@ var GlitrRouter = function () {
         value: function generateSocketEmitHandlers(socket) {
             var _this3 = this;
 
-            console.log('socket id 2:', socket.id);
             return {
                 get: function get(path, payload, headers) {
                     return _this3.generateSocketEmitter(socket, 'get', path, payload, headers);
                 },
                 post: function post(path, payload, headers) {
-                    return _this3.generateSocketEmitter(id, 'post', path, payload, headers);
+                    return _this3.generateSocketEmitter(socket, 'post', path, payload, headers);
                 },
                 put: function put(path, payload, headers) {
-                    return _this3.generateSocketEmitter(id, 'put', path, payload, headers);
+                    return _this3.generateSocketEmitter(socket, 'put', path, payload, headers);
                 },
                 delete: function _delete(path, payload, headers) {
-                    return _this3.generateSocketEmitter(id, 'delete', path, payload, headers);
+                    return _this3.generateSocketEmitter(socket, 'delete', path, payload, headers);
                 }
             };
         }
@@ -144,7 +138,6 @@ var GlitrRouter = function () {
                 socket.on('disconnect', function () {
                     return delete _this4.sockets[socket.id];
                 });
-                console.log('socket id 1:', Object.keys(socket.client));
 
                 _this4.routes.forEach(function (route) {
                     if (route.hasOwnProperty('socketio') && route.socket || socketioDefault) {
@@ -160,7 +153,6 @@ var GlitrRouter = function () {
                 var body = payload.body,
                     headers = payload.headers;
 
-                console.log('received header', headers, 'body', body);
                 var req = {
                     headers: _extends({}, headers, (0, _urlParse2.default)(route.path)),
                     body: body
@@ -174,7 +166,6 @@ var GlitrRouter = function () {
                             status: status
                         }, headers, headerProps);
 
-                        console.log('returning response to', headers.callback);
                         if (!!headers.callback) {
                             socket.emit(headers.callback, { headers: newHeaders, body: data });
                         }

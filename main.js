@@ -37,11 +37,7 @@ class GlitrRouter {
     }
 
     generateSocketEmitter(socket, method, path, payload, headers = {}) {
-        console.log('socket id 3:', socket.id);
-
         return new Promise((resolve, reject) => {
-            console.log('generating emitter');
-
             if (!!headers.callback) {
                 const { requestTimeout } = this.options;
                 const randomHash = crypto.randomBytes(64).toString('hex');
@@ -57,13 +53,11 @@ class GlitrRouter {
                 });
             }
 
-            console.log('socket id 4:', socket.id);
             socket.emit(`${method}::>${path}`, { headers, body: payload });
         });
     }
 
     generateSocketEmitHandlers(socket) {
-        console.log('socket id 2:', socket.id);
         return {
             get: (path, payload, headers) => {
                 return this.generateSocketEmitter(socket, 'get', path, payload, headers);
@@ -89,8 +83,7 @@ class GlitrRouter {
         this.io.of(namespace).on('connection', socket => {
             this.sockets[socket.id] = this.generateSocketEmitHandlers(socket);
             socket.on('disconnect', () => delete this.sockets[socket.id]);
-            console.log('socket id 1:', Object.keys(socket.client));
-            
+
             this.routes.forEach(route => {    
                 if ((route.hasOwnProperty('socketio') && route.socket) || socketioDefault) {
                     socket.on(`${route.method}::>${route.path}`, this.generateSocketHandler(socket, route));
@@ -102,7 +95,6 @@ class GlitrRouter {
     generateSocketHandler(socket, route) {
         return (payload) => {
             const { body, headers } = payload;
-            console.log('received header', headers, 'body', body);
             const req = {
                 headers: {
                     ...headers,
@@ -119,7 +111,6 @@ class GlitrRouter {
                         ...headerProps
                     }
 
-                    console.log('returning response to', headers.callback);
                     if (!!headers.callback) {
                         socket.emit(headers.callback, { headers: newHeaders, body: data });
                     }
