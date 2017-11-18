@@ -4,7 +4,8 @@
   "description": "a router that generates routing for the server on express and socket.io.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "babel main.js > index.js"
   },
   "keywords": [
     "express",
