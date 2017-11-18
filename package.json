@@ -1,6 +1,6 @@
 {
   "name": "glitr-router",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "a router that generates routing for the server on express and socket.io.",
   "main": "index.js",
   "scripts": {
@@ -30,5 +30,9 @@
     "http": "^0.0.0",
     "socket.io": "^2.0.4",
     "url-parse": "^1.2.0"
+  },
+  "repository": {
+    "type" : "git",
+    "url" : "git@bitbucket.org:xoron/glitr-router.git"
   }
 }
