@@ -1,0 +1,34 @@
+{
+  "name": "glitr-router",
+  "version": "0.0.3",
+  "description": "a router that generates routing for the server on express and socket.io.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "express",
+    "socket.io",
+    "router",
+    "client",
+    "server",
+    "glitr",
+    "REST"
+  ],
+  "author": "raju maher",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-es2016": "^6.24.1",
+    "babel-preset-es2017": "^6.24.1",
+    "socket.io-client": "^2.0.4"
+  },
+  "dependencies": {
+    "express": "^4.16.2",
+    "http": "^0.0.0",
+    "socket.io": "^2.0.4",
+    "url-parse": "^1.2.0"
+  }
+}
