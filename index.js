@@ -110,12 +110,13 @@ class GlitrRouter {
                 },
                 body
             };
-            const res = {
-                send: (data, headersOverride = {}) => {
+
+            const generateReponse = (status) => {
+                return (data, headerProps = {}) => {
                     const newHeaders = {
+                        status,
                         ...headers,
-                        status: 200,
-                        ...headersOverride
+                        ...headerProps
                     }
 
                     console.log('returning response to', headers.callback);
@@ -123,6 +124,14 @@ class GlitrRouter {
                         socket.emit(headers.callback, { headers: newHeaders, body: data });
                     }
                 }
+            }
+
+            const res = {
+                send: generateReponse(200),
+                end: generateReponse(200),
+                emit: generateReponse(200),
+                fail: generateReponse(400),
+                error: generateReponse(200),
             };
 
             const runHandler = (index) => {

@@ -1,8 +1,8 @@
 # glitr-router
 
-`glitr-router` implements router functionality for `express` `socket.io` with middleware and response functionality. this makes not only possible for connected clients to make requests to the server using HTTP verb semantics, but also provides the server with a method to achieve the same functionality on the client end from the server. this would be useful for making requests to clients to query their client-side database. this is seamlessly possible by making use of event driven nature of `socket.io` and dynamic listeners.
-
 ## Server
+
+`glitr-router` implements router functionality for `express` `socket.io` with middleware and response functionality. this makes not only possible for connected clients to make requests to the server using HTTP verb semantics, but also provides the server with a method to achieve the same functionality on the client end from the server. this would be useful for making requests to clients to query their client-side database. this is seamlessly possible by making use of event driven nature of `socket.io` and dynamic listeners.
 
 `./gr.js`
 
@@ -88,7 +88,7 @@ an object containing the following attributes:
 
 ## Usage
 
-when a new instance of glitr-route is created, the instance exposes the following objects:
+when a new instance of `glitr-router` is created, the instance exposes the following objects:
 
 |attribute|description
 |--|--|
@@ -122,4 +122,66 @@ const routes = [
 ];
 ```
 
-for more details about the client-side implmentation see `glitr-router-client` (link to project)
+# Emitting a message
+
+the router on the client should use `glitr-router-client` which uses `socket.io`'s event driven nature to create a router over the websocket connection.
+
+this means you can send messages to the client as if it was a webapp communicating to a server.
+
+when a client connects to the server, the some `socket emitter` methods aregenerated and stored into an object where they keys are the connected sockets id.
+
+```javascript
+import { sockets } from './gr.js';
+
+const connectedUser = sockets['<someClientId>'];
+
+// console.log(Object.keys(connectedUser));
+/*
+    ['get', 'post', 'put', 'delete']
+*/
+```
+
+## connectedUser.get(path, payload, headers)
+## connectedUser.post(path, payload, headers)
+## connectedUser.put(path, payload, headers)
+## connectedUser.delete(path, payload, headers)
+
+### Request
+
+|name|required|type|description
+|--|--|--|--|
+|path|yes|string|a string the represents the path on the client to make the request.|
+|payload|no|object|this optional first can be used for sending data to the client over the socket|
+|headers|no|object|this is an option first to pass additional metadata about the request.|
+|headers.callback|no|bollean|set this value to true if you want to emit a message to the client and you want the client to respond when finished.|
+
+### Response
+
+when `callback` is set to true in the headers of a request, the method will return a promise object wuth data sent back from the client like you would expect for any regular request over HTTP protocol. the response object properties are described by the following table.
+
+|name|description|
+|--|--|
+|headers|some metadata about the request sent over by the client|
+|body|this is the payload the client has sent back to the server.|
+
+### Example
+
+```javascript
+import { sockets } from './gr.js';
+
+const connectedUser = sockets['<someClientId>'];
+
+connectedSocket.post('/send-message',
+    {
+        message: 'hello world',
+        recipient: 'clark'
+    }, {
+        callback: true
+    }
+).then((dataFromClient) => {
+    // process dataFromClient here ...
+    console.log(dataFromClient);
+});
+```
+
+**for more details about the client-side implmentation see `glitr-router-client` (link to project)**
