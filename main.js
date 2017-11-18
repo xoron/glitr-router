@@ -69,13 +69,13 @@ class GlitrRouter {
                 return this.generateSocketEmitter(socket, 'get', path, payload, headers);
             },
             post: (path, payload, headers) => {
-                return this.generateSocketEmitter(id, 'post', path, payload, headers);
+                return this.generateSocketEmitter(socket, 'post', path, payload, headers);
             },
             put: (path, payload, headers) => {
-                return this.generateSocketEmitter(id, 'put', path, payload, headers);
+                return this.generateSocketEmitter(socket, 'put', path, payload, headers);
             },
             delete: (path, payload, headers) => {
-                return this.generateSocketEmitter(id, 'delete', path, payload, headers);
+                return this.generateSocketEmitter(socket, 'delete', path, payload, headers);
             }
         }
     }

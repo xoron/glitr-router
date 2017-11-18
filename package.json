@@ -1,6 +1,6 @@
 {
   "name": "glitr-router",
-  "version": "0.0.4",
+  "version": "0.0.6",
   "description": "a router that generates routing for the server on express and socket.io.",
   "main": "index.js",
   "scripts": {
