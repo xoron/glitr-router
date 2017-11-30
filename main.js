@@ -2,12 +2,24 @@ import urlParser from 'url-parse';
 import http from 'http';
 import express from 'express';
 import SocketIO from 'socket.io';
-import { setTimeout } from 'timers';
 import crypto from 'crypto';
 
 class GlitrRouter {
-    constructor(routes, options) {    
-        this.options = options;
+    constructor(routes, options = {}) {    
+        const {
+            expressDefault = true,
+            socketioDefault = true,
+            namespace = '',
+            requestTimeout = 10000
+        } = options;
+
+        this.options = {
+            expressDefault,
+            socketioDefault,
+            namespace,
+            requestTimeout
+        };
+
         this.routes = routes.map(route => typeof route.handler === 'function'
             ? { ...route, handler: [route.handler] }
             : route
@@ -23,7 +35,7 @@ class GlitrRouter {
     generateExpressRoutes() {
         const {
             namespace,
-            expressDefault = true,
+            expressDefault,
         } = this.options;
 
         this.routes.forEach(route => {
@@ -47,12 +59,12 @@ class GlitrRouter {
                 }, requestTimeout);
                 
                 headers.callback = randomHash;
-                this.socket.once(randomHash, (payload) => {
+                socket.once(randomHash, (payload) => {
                     clearTimeout(requestTimer);
                     resolve(payload)
                 });
             }
-
+            
             socket.emit(`${method}::>${path}`, { headers, body: payload });
         });
     }
@@ -76,8 +88,8 @@ class GlitrRouter {
 
     generateSocketioRoutes() {
         const {
-            namespace = '',
-            socketioDefault = true,
+            namespace,
+            socketioDefault,
         } = this.options;
 
         this.io.of(namespace).on('connection', socket => {
@@ -122,7 +134,7 @@ class GlitrRouter {
                 end: generateReponse(200),
                 emit: generateReponse(200),
                 fail: generateReponse(400),
-                error: generateReponse(200),
+                error: generateReponse(400),
             };
 
             const runHandler = (index) => {
@@ -137,7 +149,7 @@ class GlitrRouter {
         this.server.listen(port, () => {
             this.generateExpressRoutes();
             this.generateSocketioRoutes();
-            callback();
+            if (!!callback) callback();
         });
     }
 }

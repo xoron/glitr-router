@@ -24,8 +24,6 @@ var _socket = require('socket.io');
 
 var _socket2 = _interopRequireDefault(_socket);
 
-var _timers = require('timers');
-
 var _crypto = require('crypto');
 
 var _crypto2 = _interopRequireDefault(_crypto);
@@ -37,10 +35,28 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var GlitrRouter = function () {
-    function GlitrRouter(routes, options) {
+    function GlitrRouter(routes) {
+        var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
         _classCallCheck(this, GlitrRouter);
 
-        this.options = options;
+        var _options$expressDefau = options.expressDefault,
+            expressDefault = _options$expressDefau === undefined ? true : _options$expressDefau,
+            _options$socketioDefa = options.socketioDefault,
+            socketioDefault = _options$socketioDefa === undefined ? true : _options$socketioDefa,
+            _options$namespace = options.namespace,
+            namespace = _options$namespace === undefined ? '' : _options$namespace,
+            _options$requestTimeo = options.requestTimeout,
+            requestTimeout = _options$requestTimeo === undefined ? 10000 : _options$requestTimeo;
+
+
+        this.options = {
+            expressDefault: expressDefault,
+            socketioDefault: socketioDefault,
+            namespace: namespace,
+            requestTimeout: requestTimeout
+        };
+
         this.routes = routes.map(function (route) {
             return typeof route.handler === 'function' ? _extends({}, route, { handler: [route.handler] }) : route;
         });
@@ -59,8 +75,7 @@ var GlitrRouter = function () {
 
             var _options = this.options,
                 namespace = _options.namespace,
-                _options$expressDefau = _options.expressDefault,
-                expressDefault = _options$expressDefau === undefined ? true : _options$expressDefau;
+                expressDefault = _options.expressDefault;
 
 
             this.routes.forEach(function (route) {
@@ -87,12 +102,12 @@ var GlitrRouter = function () {
 
                     var randomHash = _crypto2.default.randomBytes(64).toString('hex');
 
-                    var requestTimer = (0, _timers.setTimeout)(function () {
+                    var requestTimer = setTimeout(function () {
                         reject('request timed out :(');
                     }, requestTimeout);
 
                     headers.callback = randomHash;
-                    _this2.socket.once(randomHash, function (payload) {
+                    socket.once(randomHash, function (payload) {
                         clearTimeout(requestTimer);
                         resolve(payload);
                     });
@@ -127,10 +142,8 @@ var GlitrRouter = function () {
             var _this4 = this;
 
             var _options2 = this.options,
-                _options2$namespace = _options2.namespace,
-                namespace = _options2$namespace === undefined ? '' : _options2$namespace,
-                _options2$socketioDef = _options2.socketioDefault,
-                socketioDefault = _options2$socketioDef === undefined ? true : _options2$socketioDef;
+                namespace = _options2.namespace,
+                socketioDefault = _options2.socketioDefault;
 
 
             this.io.of(namespace).on('connection', function (socket) {
@@ -177,7 +190,7 @@ var GlitrRouter = function () {
                     end: generateReponse(200),
                     emit: generateReponse(200),
                     fail: generateReponse(400),
-                    error: generateReponse(200)
+                    error: generateReponse(400)
                 };
 
                 var runHandler = function runHandler(index) {
@@ -197,7 +210,7 @@ var GlitrRouter = function () {
             this.server.listen(port, function () {
                 _this5.generateExpressRoutes();
                 _this5.generateSocketioRoutes();
-                callback();
+                if (!!callback) callback();
             });
         }
     }]);
