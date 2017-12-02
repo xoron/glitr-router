@@ -654,7 +654,7 @@ block-stream@*:
   dependencies:
     inherits "~2.0.0"
 
-body-parser@1.18.2:
+body-parser@1.18.2, body-parser@^1.18.2:
   version "1.18.2"
   resolved "https://registry.yarnpkg.com/body-parser/-/body-parser-1.18.2.tgz#87678a19d84b47d859b83199bd59bce222b10454"
   dependencies:
@@ -2009,10 +2009,6 @@ url-parse@^1.2.0:
   dependencies:
     querystringify "~1.0.0"
     requires-port "~1.0.0"
-
-url-parser@^0.0.1:
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/url-parser/-/url-parser-0.0.1.tgz#6f8115bfe93db096e8febb991232a2544d800fa9"
 
 user-home@^1.1.1:
   version "1.1.1"

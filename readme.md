@@ -1,6 +1,6 @@
 # glitr-router
 
-## Server
+## example
 
 `glitr-router` implements router functionality for `express` `socket.io` with middleware and response functionality. this makes not only possible for connected clients to make requests to the server using HTTP verb semantics, but also provides the server with a method to achieve the same functionality on the client end from the server. this would be useful for making requests to clients to query their client-side database. this is seamlessly possible by making use of event driven nature of `socket.io` and dynamic listeners.
 
@@ -64,17 +64,17 @@ an array of objects:
 
 #### socket.io handlers
 
-in the case of creating `handler` methods for `socket.io`, if the request header `callback` property **on the client** is set to `true`, the handlers methods must respond back to the client.
+in the case of creating `handler` methods for `socket.io`, if the request header `callback` property **from the client** is set to `true`, the handlers methods must respond back to the client.
 
 the handler response object has a few helper methods to help with this:
 
 |method|description|
 |--|--|
-|send| sends a response with a default status code 200|
-|end| sends a response with a default status code 200|
-|emit| sends a response with a default status code 200|
-|fail| sends a response with a default status code 400|
-|error| sends a response with a default status code 400|
+|send| sends a response with a default status code `200`|
+|end| sends a response with a default status code `200`|
+|emit| sends a response with a default status code `200`|
+|fail| sends a response with a default status code `400`|
+|error| sends a response with a default status code `400`|
 
 all these response methods take 2 parametes i.e. `res.send(data, headers)`. both parametes are options. `data` is the payload to send, `headers` is an object to pass additional data in the headers. you can assign a value to `headers.status` to sent to the client to ovverride the default status code mentioned in the previous table.
 
@@ -89,7 +89,7 @@ an object containing the following attributes:
 |attrubute|required|default|description|
 |--|--|--|--|
 |namespace|optional|''|a namespace to assign to all the routes. applied to both `socket.io` and `express`. namespaces are applied to `socket.io` in the method described on thier [docs](https://socket.io/docs/rooms-and-namespaces/#custom-namespaces). express endpoints are namespaced with their path set to listen for the path: `/${namespace}${path}`. the corresponding`socket.io` event listener is set to listen for for an event in the format: `${method}::>${path}`|
-|requestTimeout|optional|10000|this is the number of miliseconds to for `socket.io` to wait before throwing a timeout exception when makeing a request that expects a callback. getting a response from the client is optional with 'socket.io` and can be dynamically required ([see below](#response)).|
+|requestTimeout|optional|10000|this is the number of miliseconds to for `socket.io` to wait before throwing a timeout exception when making a request that expects a callback. getting a response from the client is optional with 'socket.io` and can be dynamically required ([see below](#response)).|
 |expressDefault|optional|true|sets all routes to use `express` endoints by default|
 |socketDefault|optional|true|sets all routes to use `socket.io` endoints by default|
 

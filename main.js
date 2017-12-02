@@ -3,6 +3,7 @@ import http from 'http';
 import express from 'express';
 import SocketIO from 'socket.io';
 import crypto from 'crypto';
+import bodyParser from 'body-parser';
 
 class GlitrRouter {
     constructor(routes, options = {}) {    
@@ -37,6 +38,8 @@ class GlitrRouter {
             namespace,
             expressDefault,
         } = this.options;
+
+        this.app.use(bodyParser.json());
 
         this.routes.forEach(route => {
     
