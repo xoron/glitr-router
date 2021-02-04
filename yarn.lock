@@ -1933,8 +1933,8 @@ socket.io-parser@~4.0.3, socket.io-parser@~4.0.4:
     debug "~4.3.1"
 
 socket.io@^3.0.3:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/socket.io/-/socket.io-3.1.0.tgz#4f3accda31e95893f618090c9cb5e85d345421fb"
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/socket.io/-/socket.io-3.1.1.tgz#905e3d4a3b37d8e7970e67a4a6eb81110a5778ba"
   dependencies:
     "@types/cookie" "^0.4.0"
     "@types/cors" "^2.8.8"
